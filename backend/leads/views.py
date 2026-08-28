@@ -1,9 +1,16 @@
+
 import json
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import create_lead, get_leads, get_lead_by_id, update_lead
+from .services import (
+    create_lead,
+    get_leads,
+    get_lead_by_id,
+    update_lead,
+    delete_lead
+)
 
 
 @csrf_exempt
@@ -75,6 +82,19 @@ def get_lead(request, lead_id):
         lead["updated_at"] = lead["updated_at"].isoformat()
 
         return JsonResponse(lead)
+
+    if request.method == "DELETE":
+        deleted = delete_lead(lead_id)
+
+        if not deleted:
+            return JsonResponse(
+                {"error": "Lead not found"},
+                status=404
+            )
+
+        return JsonResponse(
+            {"message": "Lead deleted successfully"}
+        )
 
     return JsonResponse(
         {"error": "Method not allowed"},
