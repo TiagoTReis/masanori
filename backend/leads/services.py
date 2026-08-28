@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+from bson import ObjectId
+
 from .mongodb import db
 
 
@@ -24,3 +26,7 @@ def create_lead(name, email, phone, company, status, source):
 
 def get_leads():
     return list(db.leads.find())
+
+
+def get_lead_by_id(lead_id):
+    return db.leads.find_one({"_id": ObjectId(lead_id)})
