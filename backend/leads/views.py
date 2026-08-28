@@ -1,10 +1,9 @@
 import json
 
 from django.http import JsonResponse
-
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import create_lead, get_leads, get_lead_by_id
+from .services import create_lead, get_leads, get_lead_by_id, update_lead
 
 
 @csrf_exempt
@@ -43,17 +42,42 @@ def list_leads(request):
     )
 
 
+@csrf_exempt
 def get_lead(request, lead_id):
-    lead = get_lead_by_id(lead_id)
+    if request.method == "GET":
+        lead = get_lead_by_id(lead_id)
 
-    if lead is None:
-        return JsonResponse(
-            {"error": "Lead not found"},
-            status=404
-        )
+        if lead is None:
+            return JsonResponse(
+                {"error": "Lead not found"},
+                status=404
+            )
 
-    lead["_id"] = str(lead["_id"])
-    lead["created_at"] = lead["created_at"].isoformat()
-    lead["updated_at"] = lead["updated_at"].isoformat()
+        lead["_id"] = str(lead["_id"])
+        lead["created_at"] = lead["created_at"].isoformat()
+        lead["updated_at"] = lead["updated_at"].isoformat()
 
-    return JsonResponse(lead)
+        return JsonResponse(lead)
+
+    if request.method == "PATCH":
+        data = json.loads(request.body)
+
+        lead = update_lead(lead_id, data)
+
+        if lead is None:
+            return JsonResponse(
+                {"error": "Lead not found"},
+                status=404
+            )
+
+        lead["_id"] = str(lead["_id"])
+        lead["created_at"] = lead["created_at"].isoformat()
+        lead["updated_at"] = lead["updated_at"].isoformat()
+
+        return JsonResponse(lead)
+
+    return JsonResponse(
+        {"error": "Method not allowed"},
+        status=405
+    )
+
