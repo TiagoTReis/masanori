@@ -20,3 +20,7 @@ def create_lead(name, email, phone, company, status, source):
     lead["_id"] = result.inserted_id
 
     return lead
+
+
+def get_leads():
+    return list(db.leads.find())
