@@ -31,6 +31,7 @@ def get_leads():
 def get_lead_by_id(lead_id):
     return db.leads.find_one({"_id": ObjectId(lead_id)})
 
+
 def update_lead(lead_id, updates):
     updates["updated_at"] = datetime.now(timezone.utc)
 
@@ -43,3 +44,11 @@ def update_lead(lead_id, updates):
         return None
 
     return get_lead_by_id(lead_id)
+
+
+def delete_lead(lead_id):
+    result = db.leads.delete_one(
+        {"_id": ObjectId(lead_id)}
+    )
+
+    return result.deleted_count > 0
