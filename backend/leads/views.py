@@ -1,4 +1,3 @@
-
 import json
 
 from django.http import JsonResponse
@@ -11,6 +10,7 @@ from .services import (
     update_lead,
     delete_lead
 )
+from .validators import validate_lead
 
 
 @csrf_exempt
@@ -26,7 +26,21 @@ def list_leads(request):
         return JsonResponse(leads, safe=False)
 
     if request.method == "POST":
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {"error": "Invalid JSON"},
+                status=400
+            )
+
+        errors = validate_lead(data)
+
+        if errors:
+            return JsonResponse(
+                {"error": "Validation error", "details": errors},
+                status=400
+            )
 
         lead = create_lead(
             data["name"],
@@ -67,7 +81,21 @@ def get_lead(request, lead_id):
         return JsonResponse(lead)
 
     if request.method == "PATCH":
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {"error": "Invalid JSON"},
+                status=400
+            )
+
+        errors = validate_lead(data, partial=True)
+
+        if errors:
+            return JsonResponse(
+                {"error": "Validation error", "details": errors},
+                status=400
+            )
 
         lead = update_lead(lead_id, data)
 
@@ -100,4 +128,3 @@ def get_lead(request, lead_id):
         {"error": "Method not allowed"},
         status=405
     )
-

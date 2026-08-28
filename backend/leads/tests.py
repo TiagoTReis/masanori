@@ -151,7 +151,7 @@ class LeadViewTestCase(TestCase):
             "phone": "12966666666",
             "company": "Empresa POST",
             "status": "new",
-            "source": "test"
+            "source": "website"
         }
 
         request = self.factory.post(
@@ -229,3 +229,128 @@ class LeadViewTestCase(TestCase):
         )
 
         self.assertIsNone(found_lead)
+
+    def test_create_lead_invalid_json(self):
+        request = self.factory.post(
+            "/api/leads/",
+            data="{invalid json}",
+            content_type="application/json"
+        )
+
+        response = list_leads(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"Invalid JSON", response.content)
+
+    def test_create_lead_missing_field(self):
+        data = {
+            "name": "Lead Incompleto",
+            "email": "incompleto@teste.com",
+            "phone": "12911111111",
+            "company": "Empresa Teste",
+            "status": "new"
+        }
+
+        request = self.factory.post(
+            "/api/leads/",
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        response = list_leads(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"source", response.content)
+
+    def test_create_lead_invalid_email(self):
+        data = {
+            "name": "Email Inválido",
+            "email": "email-invalido",
+            "phone": "12922222222",
+            "company": "Empresa Teste",
+            "status": "new",
+            "source": "website"
+        }
+
+        request = self.factory.post(
+            "/api/leads/",
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        response = list_leads(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"Invalid email", response.content)
+
+    def test_create_lead_invalid_status(self):
+        data = {
+            "name": "Status Inválido",
+            "email": "status@teste.com",
+            "phone": "12933333333",
+            "company": "Empresa Teste",
+            "status": "banana",
+            "source": "website"
+        }
+
+        request = self.factory.post(
+            "/api/leads/",
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        response = list_leads(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"Invalid status", response.content)
+
+    def test_create_lead_invalid_source(self):
+        data = {
+            "name": "Source Inválida",
+            "email": "source@teste.com",
+            "phone": "12944444444",
+            "company": "Empresa Teste",
+            "status": "new",
+            "source": "banana"
+        }
+
+        request = self.factory.post(
+            "/api/leads/",
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        response = list_leads(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"Invalid source", response.content)
+
+    def test_update_lead_invalid_field(self):
+        lead = create_lead(
+            "PATCH Inválido",
+            "patch@teste.com",
+            "12955555555",
+            "Empresa Teste",
+            "new",
+            "website"
+        )
+
+        data = {
+            "campo_inexistente": "valor"
+        }
+
+        request = self.factory.patch(
+            f"/api/leads/{lead['_id']}/",
+            data=json.dumps(data),
+            content_type="application/json"
+        )
+
+        response = get_lead(
+            request,
+            str(lead["_id"])
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b"invalid_fields", response.content)
+
+        delete_lead(str(lead["_id"]))
