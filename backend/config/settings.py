@@ -34,6 +34,10 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 MONGO_URI = os.getenv('MONGO_URI')
 MONGO_DB_NAME = os.getenv('MONGO_DB_NAME')
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]
+
 
 # Application definition
 
@@ -44,11 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'leads',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
