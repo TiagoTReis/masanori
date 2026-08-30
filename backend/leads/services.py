@@ -6,6 +6,8 @@ from .mongodb import db
 
 
 def create_lead(name, email, phone, company, status, source):
+    now = datetime.now(timezone.utc)
+
     lead = {
         "name": name,
         "email": email,
@@ -13,8 +15,15 @@ def create_lead(name, email, phone, company, status, source):
         "company": company,
         "status": status,
         "source": source,
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": now,
+        "updated_at": now,
+        "interactions": [
+            {
+                "type": "created",
+                "description": "Lead cadastrado no CRM",
+                "created_at": now,
+            }
+        ],
     }
 
     result = db.leads.insert_one(lead)
@@ -52,3 +61,20 @@ def delete_lead(lead_id):
     )
 
     return result.deleted_count > 0
+
+def add_interaction(lead_id, interaction_type, description):
+    interaction = {
+        "type": interaction_type,
+        "description": description,
+        "created_at": datetime.now(timezone.utc),
+    }
+
+    result = db.leads.update_one(
+        {"_id": ObjectId(lead_id)},
+        {"$push": {"interactions": interaction}}
+    )
+
+    if result.matched_count == 0:
+        return None
+
+    return get_lead_by_id(lead_id)

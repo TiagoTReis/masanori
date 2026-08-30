@@ -8,7 +8,8 @@ from .services import (
     get_leads,
     get_lead_by_id,
     update_lead,
-    delete_lead
+    delete_lead,
+    add_interaction
 )
 from .validators import validate_lead
 
@@ -128,3 +129,55 @@ def get_lead(request, lead_id):
         {"error": "Method not allowed"},
         status=405
     )
+
+@csrf_exempt
+def add_lead_interaction(request, lead_id):
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "Method not allowed"},
+            status=405
+        )
+
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {"error": "Invalid JSON"},
+            status=400
+        )
+
+    interaction_type = data.get("type")
+    description = data.get("description")
+
+    if not interaction_type or not description:
+        return JsonResponse(
+            {
+                "error": "Validation error",
+                "details": {
+                    "type": "This field is required.",
+                    "description": "This field is required."
+                }
+            },
+            status=400
+        )
+
+    lead = add_interaction(
+        lead_id,
+        interaction_type,
+        description
+    )
+
+    if lead is None:
+        return JsonResponse(
+            {"error": "Lead not found"},
+            status=404
+        )
+
+    lead["_id"] = str(lead["_id"])
+    lead["created_at"] = lead["created_at"].isoformat()
+    lead["updated_at"] = lead["updated_at"].isoformat()
+
+    for interaction in lead.get("interactions", []):
+        interaction["created_at"] = interaction["created_at"].isoformat()
+
+    return JsonResponse(lead)
