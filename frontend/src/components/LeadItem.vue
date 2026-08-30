@@ -9,12 +9,16 @@ defineProps({
   },
 })
 
-const emit = defineEmits(['edit', 'delete'])
+const emit = defineEmits(['edit', 'delete', 'details'])
 
 const showDeleteModal = ref(false)
 
 const edit = () => {
   emit('edit')
+}
+
+const openDetails = () => {
+  emit('details')
 }
 
 const openDeleteModal = () => {
@@ -76,8 +80,11 @@ const sourceLabel = (source) => {
 <template>
   <!-- LINHA DO LEAD -->
   <tr>
-    <td class="lead-name">
-      {{ lead.name }}
+    <td
+    class="lead-name"
+    @click="openDetails"
+  >
+  {{ lead.name }}
     </td>
 
     <td>
@@ -191,6 +198,11 @@ const sourceLabel = (source) => {
 .lead-name {
   color: #e1e2eb;
   font-weight: 700;
+  cursor: pointer;
+}
+
+.lead-name:hover {
+  color: #ffd700;
 }
 
 /* =========================

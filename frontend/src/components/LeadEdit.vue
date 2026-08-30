@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, watch } from 'vue'
 
@@ -257,13 +256,13 @@ const save = () => {
 
 <style scoped>
 /* =========================
-   MODAL
+   OVERLAY
 ========================= */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,13 +270,18 @@ const save = () => {
   padding: 20px;
 }
 
+/* =========================
+   MODAL
+========================= */
+
 .modal {
   width: 100%;
   max-width: 650px;
-  background: #ffffff;
+  background: #161b22;
+  border: 1px solid #30363d;
   border-radius: 12px;
   padding: 28px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
 }
 
 /* =========================
@@ -289,24 +293,37 @@ const save = () => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #30363d;
 }
 
 .modal-header h3 {
   margin: 0 0 6px;
-  font-size: 24px;
+  color: #e1e2eb;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .modal-header p {
   margin: 0;
-  color: #666;
+  color: #999077;
+  font-size: 13px;
 }
 
 .close-button {
   border: none;
   background: transparent;
-  font-size: 28px;
+  font-size: 26px;
+  line-height: 1;
   cursor: pointer;
-  color: #666;
+  color: #999077;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #ffd700;
 }
 
 /* =========================
@@ -316,27 +333,38 @@ const save = () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 18px;
 }
 
 .form-group label {
+  color: #d0c6ab;
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .form-group input,
 .form-group select {
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
+  padding: 11px 12px;
+  background: #0b0e14;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #e1e2eb;
+  font-size: 14px;
   box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  outline: none;
-  border-color: #1d4ed8;
+  border-color: #ffd700;
+}
+
+.form-group select {
+  cursor: pointer;
 }
 
 /* =========================
@@ -358,6 +386,8 @@ const save = () => {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #30363d;
 }
 
 /* =========================
@@ -366,29 +396,38 @@ const save = () => {
 
 .cancel-button,
 .save-button {
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 11px 22px;
+  border-radius: 999px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .cancel-button {
-  background: #fff;
-  border: 1px solid #ccc;
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #d0c6ab;
 }
 
 .cancel-button:hover {
-  background: #f5f5f5;
+  border-color: #ffd700;
+  color: #ffd700;
 }
 
 .save-button {
-  background: #1d4ed8;
-  border: 1px solid #1d4ed8;
-  color: #fff;
+  background: #ffd700;
+  border: 1px solid #ffd700;
+  color: #15171b;
 }
 
 .save-button:hover {
-  background: #1e40af;
+  background: #e9c400;
+  border-color: #e9c400;
 }
 
 /* =========================

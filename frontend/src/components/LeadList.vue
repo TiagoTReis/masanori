@@ -3,6 +3,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import api from '../services/api'
 import LeadItem from './LeadItem.vue'
 import LeadEdit from './LeadEdit.vue'
+import LeadDetails from './LeadDetails.vue'
 import Pagination from './Pagination.vue'
 
 const emit = defineEmits(['leads-loaded'])
@@ -12,7 +13,7 @@ const loading = ref(true)
 const error = ref(null)
 
 const editingLead = ref(null)
-
+const selectedLead = ref(null)
 const search = ref('')
 const statusFilter = ref('all')
 
@@ -49,6 +50,14 @@ const editLead = (lead) => {
 
 const cancelEdit = () => {
   editingLead.value = null
+}
+
+const openLeadDetails = (lead) => {
+  selectedLead.value = lead
+}
+
+const closeLeadDetails = () => {
+  selectedLead.value = null
 }
 
 const updateLead = async ({ id, data }) => {
@@ -249,6 +258,7 @@ defineExpose({
             :lead="lead"
             @delete="deleteLead(lead._id)"
             @edit="editLead(lead)"
+            @details="openLeadDetails(lead)"
           />
 
         </tbody>
@@ -273,6 +283,12 @@ defineExpose({
       :lead="editingLead"
       @cancel="cancelEdit"
       @update="updateLead"
+    />
+
+    <LeadDetails
+      v-if="selectedLead"
+      :lead="selectedLead"
+      @close="closeLeadDetails"
     />
 
   </section>
