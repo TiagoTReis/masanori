@@ -1,4 +1,4 @@
-# Masanori
+# Masanori CRM
 
 Projeto individual desenvolvido para demonstrar a utilização de um banco de dados NoSQL com MongoDB aplicado a um CRM de leads. A aplicação permite cadastrar, consultar, editar e excluir leads, além de acompanhar interações realizadas com cada contato por meio de uma timeline.
 
