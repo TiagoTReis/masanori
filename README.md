@@ -302,3 +302,7 @@ Essa abordagem evita a necessidade de criar uma estrutura relacional separada ap
 O projeto demonstra a utilização prática de um banco de dados NoSQL em uma aplicação web, utilizando o MongoDB para armazenar informações de leads e seus históricos de interação.
 
 A aplicação integra Vue 3 no frontend, Django no backend e MongoDB como camada de persistência, permitindo demonstrar operações de CRUD, filtros, paginação e armazenamento de estruturas aninhadas em documentos.
+
+## Demonstração
+
+https://github.com/user-attachments/assets/5e6db96f-db80-41d1-a70e-28cf926437dc
